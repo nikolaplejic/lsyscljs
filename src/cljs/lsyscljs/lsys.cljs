@@ -4,6 +4,9 @@
 
 (def line-length 5)
 
+(defn flatten-vec [s]
+  (vec (flatten s)))
+
 (defn rotate [ang]
   (let [rad (* ang (/ js/Math.PI 180))
         x (* line-length (js/Math.cos rad))
@@ -33,13 +36,14 @@
 (defn lsys [start rules iters]
   (loop [state start
          remaining-iterations iters]
-    (let [new-state (atom [])]
-      (doseq [elem state
-              :let [supstitution (or (elem rules) [elem])]]
-        (swap! new-state into supstitution))
+    ;; the comprehension substitutes elements according to the grammar and returns a
+    ;; sequence of vectors, we just flatten 'em into a vector.
+    (let [new-state (flatten-vec (for [elem (seq state)
+                                       :let  [supstitution (or (elem rules) [elem])]]
+                                   supstitution))]
       (if (> remaining-iterations 0)
-        (recur @new-state (dec remaining-iterations))
-        @new-state))))
+        (recur new-state (dec remaining-iterations))
+        new-state))))
 
 (defn draw-elem [ctx meaning pos ang rotation]
   (.moveTo ctx (first pos) (second pos))

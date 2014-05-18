@@ -44,16 +44,11 @@
 (defn draw-elem [ctx meaning pos ang rotation]
   (.moveTo ctx (first pos) (second pos))
   (case meaning
-    :fw (if (= ang 0)
-          (let [new-pos [(+ line-length (first pos)) (second pos)]]
-            (.lineTo ctx (first new-pos) (second new-pos))
-            (.stroke ctx)
-            {:pos new-pos :ang ang})
-          (let [rot (rotate ang)
+    :fw (let [rot (rotate ang)
                 new-pos [(+ (first rot) (first pos)) (+ (second rot) (second pos))]]
             (.lineTo ctx (first new-pos) (second new-pos))
             (.stroke ctx)
-            {:pos new-pos :ang ang}))
+            {:pos new-pos :ang ang})
     :lt {:pos pos :ang (+ ang rotation)}
     :rt {:pos pos :ang (- ang rotation)}
     :noop {:pos pos :ang ang}))

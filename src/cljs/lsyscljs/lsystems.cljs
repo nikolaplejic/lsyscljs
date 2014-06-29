@@ -71,8 +71,7 @@
             :let [meaning (elem (om/get-state owner :cmds))
                   update (draw-elem owner meaning @current-pos @current-ang angle)]]
       (reset! current-pos (:pos update))
-      (reset! current-ang (:ang update)))
-    (.closePath ctx)))
+      (reset! current-ang (:ang update)))))
 
 (defn lsys-view [app owner]
   (reify
